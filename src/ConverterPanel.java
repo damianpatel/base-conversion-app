@@ -104,7 +104,7 @@ public class ConverterPanel extends JPanel {
         top.add(topLabel);
 
         // Center panel config
-        center.setPreferredSize(new Dimension(350, 400));
+        center.setPreferredSize(new Dimension(350, 300));
         center.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         center.add(fromBase, BorderLayout.EAST);
         center.add(toBase, BorderLayout.EAST);
@@ -170,11 +170,11 @@ public class ConverterPanel extends JPanel {
     }
 
     public boolean baseValid(String a) {
-            try {
-                Integer.parseInt(a);
-            } catch (NumberFormatException nfe) {
-                return false;
-            }
+        try {
+            Integer.parseInt(a);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
         return true;
     }
 
@@ -295,32 +295,37 @@ public class ConverterPanel extends JPanel {
                 toBaseInput.setText(toBaseInput.getText().replaceAll("\\s+",""));
                 fromBaseInput.setText(fromBaseInput.getText().replaceAll("\\s+",""));
                 if (!(baseValid(toBaseInput.getText()))) {
-                    JOptionPane.showMessageDialog(null, "\"TO BASE VALUE\" MUST BE A VALID POSITIVE INTEGERS");
+                    JOptionPane.showMessageDialog(null, "\"TO BASE VALUE\" MUST BE A VALID POSITIVE INTEGER GREATER THAN 1 AND LESS THAN 36");
                     toBaseInput.setBackground(new Color(255, 129, 129));
                 }
                 if (!(baseValid(fromBaseInput.getText()))) {
-                    JOptionPane.showMessageDialog(null, "\"FROM BASE\" VALUE MUST BE A VALID POSITIVE INTEGERS");
+                    JOptionPane.showMessageDialog(null, "\"FROM BASE\" VALUE MUST BE A VALID POSITIVE INTEGER GREATER THAN 1 AND LESS THAN 36");
                     fromBaseInput.setBackground(new Color(255, 129, 129));
 
                 }
                 if (baseValid(toBaseInput.getText())) {
-                    if (Integer.parseInt(toBaseInput.getText()) < 1) {
+                    if (Integer.parseInt(toBaseInput.getText()) < 2 || Integer.parseInt(toBaseInput.getText()) > 36) {
                         toBaseInput.setBackground(new Color(255, 129, 129));
-                        JOptionPane.showMessageDialog(null, "ALL BASE VALUES MUST BE VALID POSITIVE INTEGERS");
+                        JOptionPane.showMessageDialog(null, "\"TO BASE\" VALUE MUST BE VALID POSITIVE INTEGER GREATER THAN 1 AND LESS THAN 36");
                     }
                 }
                 if (baseValid(fromBaseInput.getText())) {
-                    if (Integer.parseInt(toBaseInput.getText()) < 1) {
+                    if (Integer.parseInt(fromBaseInput.getText()) < 2 || Integer.parseInt(fromBaseInput.getText()) > 36) {
                         fromBaseInput.setBackground(new Color(255, 129, 129));
-                        JOptionPane.showMessageDialog(null, "ALL BASE VALUES MUST BE VALID POSITIVE INTEGERS");
+                        JOptionPane.showMessageDialog(null, "\"FROM BASE\" VALUE MUST BE VALID POSITIVE INTEGER GREATER THAN 1 AND LESS THAN 36");
                     }
                 }
                 if (baseValid(toBaseInput.getText()) && baseValid(fromBaseInput.getText()) && isAcceptable(numInput.getText(), Integer.parseInt(fromBaseInput.getText()))) {
                     if (!DecimalToBaseX.algorithm(toDecimal(numInput.getText(), Integer.parseInt(fromBaseInput.getText())), Integer.parseInt(toBaseInput.getText())).equals("invalid")) {
-                        numInput.setBackground(Color.WHITE);
-                        fromBaseInput.setBackground(Color.WHITE);
-                        toBaseInput.setBackground(Color.WHITE);
-                        output.setText(DecimalToBaseX.algorithm(toDecimal(numInput.getText(), Integer.parseInt(fromBaseInput.getText())), Integer.parseInt(toBaseInput.getText())));
+                        if (!((Integer.parseInt(fromBaseInput.getText()) < 2 || Integer.parseInt(fromBaseInput.getText()) > 36) && Integer.parseInt(fromBaseInput.getText()) < 2 || Integer.parseInt(fromBaseInput.getText()) > 36)) {
+                            System.out.println();
+                            numInput.setBackground(Color.WHITE);
+                            fromBaseInput.setBackground(Color.WHITE);
+                            toBaseInput.setBackground(Color.WHITE);
+                            output.setText(DecimalToBaseX.algorithm(toDecimal(numInput.getText(), Integer.parseInt(fromBaseInput.getText())), Integer.parseInt(toBaseInput.getText())));
+                        } else {
+                            numInput.setBackground(new Color(255, 129, 129));
+                        }
                     } else {
                         numInput.setBackground(new Color(255, 129, 129));
                     }
