@@ -96,7 +96,7 @@ public class ConverterPanel extends JPanel {
         }
 
         // Title panel/label config
-        top.setBackground(new Color(255, 182, 118));
+        top.setBackground(new Color(255, 220, 150));
         Font title = new Font("Georgia", Font.BOLD, 25);
         topLabel.setText("Welcome to the Base Converter!");
         topLabel.setFont(title);
@@ -145,7 +145,7 @@ public class ConverterPanel extends JPanel {
         convert.setPreferredSize(new Dimension(100, 40));
         convert.setText("Convert");
         convert.setFont(new Font("Courier New", Font.PLAIN, 15));
-        convert.setBackground(new Color(112, 255, 112));
+        convert.setBackground(new Color(150, 255, 120));
         convert.addActionListener(new Listener());
 
         // Clear button
@@ -166,7 +166,7 @@ public class ConverterPanel extends JPanel {
         // Add components to primary panel
         add(top, BorderLayout.NORTH);
         add(center, BorderLayout.CENTER);
-        setBackground(new Color(204, 240, 204));
+        setBackground(new Color(225, 255, 230));
     }
 
     public boolean baseValid(String a) {
