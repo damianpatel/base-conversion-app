@@ -9,7 +9,6 @@ public class DecimalToBaseX {
         double[] temp;
         int size = 0;
 
-        System.out.println("decTemp: " + decTemp);
         while (decTemp != 0) {
             decTemp = (int) (decTemp / base);
             size++;
@@ -18,7 +17,6 @@ public class DecimalToBaseX {
         if (size < 1) {
             return "invalid";
         }
-        System.out.println("Size: " + size);
         temp = new double[size];
         temp[size-1] = dec;
 

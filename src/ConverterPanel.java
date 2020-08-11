@@ -259,7 +259,6 @@ public class ConverterPanel extends JPanel {
             if (isNumeric(valids.charAt(i))) {
                 // Converts numeric values to decimal value
                 decValue[i] = ((Math.pow(base, (valids.length() - i - 1))) * Double.parseDouble(String.valueOf(valids.charAt(i))));
-                System.out.println("element i: " + decValue[i]);
             }
             if (letters.stream().anyMatch(String.valueOf(valids.charAt(i))::equalsIgnoreCase) && valids.charAt(i) != ' ') {
                 // Converts letters to their corresponding decimal equivalent using the letters --> integer HashMap
@@ -270,7 +269,6 @@ public class ConverterPanel extends JPanel {
             temp += j;
         }
         finalValue.append(temp);
-        System.out.println(finalValue.toString());
         return Double.parseDouble(finalValue.toString());
     }
 
@@ -302,12 +300,16 @@ public class ConverterPanel extends JPanel {
                     if (Integer.parseInt(toBaseInput.getText()) < 2 || Integer.parseInt(toBaseInput.getText()) > 36) {
                         toBaseInput.setBackground(new Color(255, 129, 129));
                         JOptionPane.showMessageDialog(null, "\"TO BASE\" VALUE MUST BE VALID POSITIVE INTEGER GREATER THAN 1 AND LESS THAN 36");
+                    } else {
+                        toBaseInput.setBackground(Color.WHITE);
                     }
                 }
                 if (baseValid(fromBaseInput.getText())) {
                     if (Integer.parseInt(fromBaseInput.getText()) < 2 || Integer.parseInt(fromBaseInput.getText()) > 36) {
                         fromBaseInput.setBackground(new Color(255, 129, 129));
                         JOptionPane.showMessageDialog(null, "\"FROM BASE\" VALUE MUST BE VALID POSITIVE INTEGER GREATER THAN 1 AND LESS THAN 36");
+                    } else {
+                        fromBaseInput.setBackground(Color.WHITE);
                     }
                 }
                 if (baseValid(toBaseInput.getText()) && baseValid(fromBaseInput.getText())) {
