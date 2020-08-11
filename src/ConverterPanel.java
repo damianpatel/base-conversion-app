@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -175,7 +174,7 @@ public class ConverterPanel extends JPanel {
         } catch (NumberFormatException nfe) {
             return false;
         }
-        return true;
+        return Integer.parseInt(a) >= 2 && Integer.parseInt(a) <= 36;
     }
 
     public boolean isNumeric(char c) {
@@ -202,24 +201,15 @@ public class ConverterPanel extends JPanel {
         a = a.replaceAll("\\s+","");
         numInput.setText(a);
 
-        for (int i = 0; i < a.length(); i++) {
-            if (a.charAt(i) == ' ') {
-                a = a.substring(0, i) + a.substring(i + 1);
-            }
-        }
-
         if (a.length() == 0) {
             x = -1;
         }
 
         for (int i = 0; i < a.length(); i++) {
-            if (a.charAt(i) == ' ') {
-                a = a.substring(0, i) + a.substring(i + 1);
-            }
-        }
-
-        for (int i = 0; i < a.length(); i++) {
             Predicate<String> equalsIgnoreCase = String.valueOf(a.charAt(i))::equalsIgnoreCase;
+            if (a.charAt(i) == '-' && i != 0) {
+                x = -1;
+            }
             if (isNumeric(a.charAt(i))) {
                 int o = Integer.parseInt(String.valueOf(a.charAt(i)));
                 // You can't use a number greater than or equal to the base
@@ -247,36 +237,41 @@ public class ConverterPanel extends JPanel {
         numInput.setText("");
     }
 
-    public int toDecimal(String value, int base) {
-        int[] decValue;
+    public double toDecimal(String value, int base) {
+        double[] decValue;
         StringBuilder valids = new StringBuilder();
         StringBuilder finalValue = new StringBuilder();
-        int temp = 0;
+        double temp = 0;
 
         for (int i = 0; i < value.length(); i++) {
-            if (isNumeric(value.charAt(i)) || letters.stream().anyMatch(String.valueOf(value.charAt(i))::equalsIgnoreCase)) {
+            if (isNumeric(value.charAt(i)) || letters.stream().anyMatch(String.valueOf(value.charAt(i))::equalsIgnoreCase) || value.charAt(i) == '-') {
                 if (value.charAt(i) != ' ') {
                     valids.append(value.charAt(i));
                 }
+                if (value.charAt(i) == '-') {
+                    DecimalToBaseX.isNegative = true;
+                }
             }
         }
-        decValue = new int[valids.length()];
+
+        decValue = new double[valids.length()];
         for (int i = 0; i < valids.length(); i++) {
             if (isNumeric(valids.charAt(i))) {
                 // Converts numeric values to decimal value
-                decValue[i] = ((int) Math.pow(base, (valids.length() - i - 1)) * Integer.parseInt(String.valueOf(valids.charAt(i))));
+                decValue[i] = ((Math.pow(base, (valids.length() - i - 1))) * Double.parseDouble(String.valueOf(valids.charAt(i))));
+                System.out.println("element i: " + decValue[i]);
             }
             if (letters.stream().anyMatch(String.valueOf(valids.charAt(i))::equalsIgnoreCase) && valids.charAt(i) != ' ') {
                 // Converts letters to their corresponding decimal equivalent using the letters --> integer HashMap
-                System.out.println("index: " + i + ", " + Arrays.toString(decValue));
-                decValue[i] = ((int) Math.pow(base, (valids.length() - i - 1)) * letterMapping.get(String.valueOf(valids.charAt(i)).toUpperCase()));
+                decValue[i] = ((Math.pow(base, (valids.length() - i - 1))) * letterMapping.get(String.valueOf(valids.charAt(i)).toUpperCase()));
             }
         }
-        for (int j : decValue) {
+        for (double j : decValue) {
             temp += j;
         }
         finalValue.append(temp);
-        return Integer.parseInt(finalValue.toString());
+        System.out.println(finalValue.toString());
+        return Double.parseDouble(finalValue.toString());
     }
 
     private class Listener extends DecimalToBaseX implements ActionListener {
@@ -315,22 +310,22 @@ public class ConverterPanel extends JPanel {
                         JOptionPane.showMessageDialog(null, "\"FROM BASE\" VALUE MUST BE VALID POSITIVE INTEGER GREATER THAN 1 AND LESS THAN 36");
                     }
                 }
-                if (baseValid(toBaseInput.getText()) && baseValid(fromBaseInput.getText()) && isAcceptable(numInput.getText(), Integer.parseInt(fromBaseInput.getText()))) {
-                    if (!DecimalToBaseX.algorithm(toDecimal(numInput.getText(), Integer.parseInt(fromBaseInput.getText())), Integer.parseInt(toBaseInput.getText())).equals("invalid")) {
-                        if (!((Integer.parseInt(fromBaseInput.getText()) < 2 || Integer.parseInt(fromBaseInput.getText()) > 36) && Integer.parseInt(fromBaseInput.getText()) < 2 || Integer.parseInt(fromBaseInput.getText()) > 36)) {
-                            System.out.println();
+                if (baseValid(toBaseInput.getText()) && baseValid(fromBaseInput.getText())) {
+                    fromBaseInput.setBackground(Color.WHITE);
+                    toBaseInput.setBackground(Color.WHITE);
+                    if (isAcceptable(numInput.getText(), Integer.parseInt(fromBaseInput.getText()))) {
+                        if (!DecimalToBaseX.algorithm(toDecimal(numInput.getText(), Integer.parseInt(fromBaseInput.getText())), Integer.parseInt(toBaseInput.getText())).equals("invalid")) {
                             numInput.setBackground(Color.WHITE);
                             fromBaseInput.setBackground(Color.WHITE);
                             toBaseInput.setBackground(Color.WHITE);
                             output.setText(DecimalToBaseX.algorithm(toDecimal(numInput.getText(), Integer.parseInt(fromBaseInput.getText())), Integer.parseInt(toBaseInput.getText())));
+                            DecimalToBaseX.isNegative = false;
                         } else {
                             numInput.setBackground(new Color(255, 129, 129));
                         }
                     } else {
                         numInput.setBackground(new Color(255, 129, 129));
                     }
-                } else {
-                    numInput.setBackground(new Color(255, 129, 129));
                 }
             }
         }
